@@ -56,8 +56,8 @@ logits = tf.nn.xw_plus_b(fc7, fc8_w, fc8_b)
 # be able to reuse some the code.
 one_hot_y = tf.one_hot(y, nb_classes)
 
-cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
-loss_operation = tf.nn.l2_loss(tf.reduce_mean(cross_entropy))
+cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
+loss_operation = tf.reduce_mean(cross_entropy)
 optimizer = tf.train.AdamOptimizer()
 training_operation = optimizer.minimize(loss_operation, var_list=[fc8_w, fc8_b])
 
@@ -82,8 +82,7 @@ sess.run(init)
 print('Training...')
 EPOCHS = 10
 BATCH_SIZE = 256
-for i in range(EPOCHS): # run epochs
-    print('Starting epoch {}'.format(i + 1))
+for i in range(EPOCHS): # run epochs print('Starting epoch {}'.format(i + 1))
     t0 = time.time()
     X_train, y_train = shuffle(X_train, y_train)
     for offset in range(0, len(X_train), BATCH_SIZE):
