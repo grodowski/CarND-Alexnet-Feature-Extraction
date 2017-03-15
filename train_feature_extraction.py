@@ -49,14 +49,14 @@ fc7 = tf.stop_gradient(fc7)
 shape = (fc7.get_shape().as_list()[-1], nb_classes) # use this shape for the weight matrix
 fc8_w = tf.Variable(tf.truncated_normal(shape=shape, mean = 0, stddev = 0.1))
 fc8_b = tf.Variable(tf.zeros(nb_classes))
-logits = tf.nn.softmax(tf.nn.xw_plus_b(fc7, fc8_w, fc8_b))
+logits = tf.nn.xw_plus_b(fc7, fc8_w, fc8_b)
 
 # TODO: Define loss, training, accuracy operations.
 # HINT: Look back at your traffic signs project solution, you may
 # be able to reuse some the code.
 one_hot_y = tf.one_hot(y, nb_classes)
 
-cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
+cross_entropy = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=one_hot_y)
 loss_operation = tf.nn.l2_loss(tf.reduce_mean(cross_entropy))
 optimizer = tf.train.AdamOptimizer()
 training_operation = optimizer.minimize(loss_operation, var_list=[fc8_w, fc8_b])
